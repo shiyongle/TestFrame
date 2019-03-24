@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dongnao.autotest.service.mapper.SystemConfigMapper">
+	<resultMap id="BaseResultMap" type="java.util.Map">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="receiver" property="receiver" jdbcType="VARCHAR" />
+		<result column="receiverName" property="receiverName" jdbcType="VARCHAR" />
+		<result column="notifyType" property="notifyType" jdbcType="INTEGER" />
+		<result column="createBy" property="createBy" jdbcType="VARCHAR" />
+		<result column="createOn" property="createOn" jdbcType="TIMESTAMP" />
+		<result column="modifyBy" property="modifyBy" jdbcType="VARCHAR" />
+		<result column="modifyOn" property="modifyOn" jdbcType="TIMESTAMP" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Table_Name">
+		`t_system_config`
+	</sql>
+	<sql id="Base_Column_List">
+		id, name, receiver, receiverName, notifyType,
+		createBy,
+		createOn,
+		modifyBy,
+		modifyOn, remark
+	</sql>
+	<sql id="Where_List">
+		<if test="name != null and name.length() > 0">
+			AND name = #{name,jdbcType=VARCHAR}
+		</if>
+		<if test="name_lk != null and name_lk.length() > 0">
+			AND name LIKE CONCAT('%', #{name_lk,jdbcType=VARCHAR},
+			'%')
+		</if>
+		<if test="remark_lk != null and remark_lk.length() > 0">
+			AND remark LIKE CONCAT('%', #{remark_lk,jdbcType=VARCHAR},
+			'%')
+		</if>
+		<if test="id_ne != null and id_ne.length() > 0">
+			AND id != #{id_ne,jdbcType=VARCHAR}
+		</if>
+		<if test="idList != null">
+			AND id IN
+			<foreach collection="list" index="index" item="item" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</sql>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id"
+		parameterType="java.util.Map">
+		INSERT INTO
+		<include refid="Table_Name" />
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				name,
+			</if>
+			<if test="receiver != null">
+				receiver,
+			</if>
+			<if test="receiverName != null">
+				receiverName,
+			</if>
+			<if test="notifyType != null">
+				notifyType,
+			</if>
+			<if test="createBy != null">
+				createBy,
+			</if>
+			<if test="createOn != null">
+				createOn,
+			</if>
+			<if test="modifyBy != null">
+				modifyBy,
+			</if>
+			<if test="modifyOn != null">
+				modifyOn,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="receiver != null">
+				#{receiver,jdbcType=VARCHAR},
+			</if>
+			<if test="receiverName != null">
+				#{receiverName,jdbcType=VARCHAR},
+			</if>
+			<if test="notifyType != null">
+				#{notifyType,jdbcType=INTEGER},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="createOn != null">
+				#{createOn,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyBy != null">
+				#{modifyBy,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyOn != null">
+				#{modifyOn,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="update" parameterType="java.util.Map">
+		UPDATE
+		<include refid="Table_Name" />
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="receiver != null">
+				receiver = #{receiver,jdbcType=VARCHAR},
+			</if>
+			<if test="receiverName != null">
+				receiverName = #{receiverName,jdbcType=VARCHAR},
+			</if>
+			<if test="notifyType != null">
+				notifyType = #{notifyType,jdbcType=INTEGER},
+			</if>
+			<if test="createBy != null">
+				createBy = #{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="createOn != null">
+				createOn = #{createOn,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyBy != null">
+				modifyBy = #{modifyBy,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyOn != null">
+				modifyOn = #{modifyOn,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="rubbish" parameterType="java.lang.Integer">
+		UPDATE
+		<include refid="Table_Name" />
+		SET rubbish = 1 WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="rubbishBatch" parameterType="java.util.List">
+		UPDATE
+		<include refid="Table_Name" />
+		SET rubbish = 1 WHERE id IN
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<delete id="delete" parameterType="java.lang.Integer">
+		DELETE FROM
+		<include refid="Table_Name" />
+		WHERE id = #{id,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteBatch" parameterType="java.util.List">
+		DELETE FROM
+		<include refid="Table_Name" />
+		WHERE id IN
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<select id="selectById" resultType="map" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		<include refid="Table_Name" />
+		WHERE id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectList" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		<include refid="Table_Name" />
+		<where>
+			<include refid="Where_List" />
+		</where>
+		ORDER BY name ASC
+	</select>
+	<select id="selectPaged" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		<include refid="Table_Name" />
+		<where>
+			<include refid="Where_List" />
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy != null and orderBy.length > 0">
+				${orderBy}
+			</when>
+			<otherwise>
+				createOn DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- ↓↓↓↓↓↓↓↓↓↓ 扩展方法 ↓↓↓↓↓↓↓↓↓↓ -->
+	<select id="selectAll" resultType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		<include refid="Table_Name" />
+		ORDER BY ordinal ASC;
+	</select>
+	<!-- ↑↑↑↑↑↑↑↑↑↑ 扩展方法 ↑↑↑↑↑↑↑↑↑↑ -->
+</mapper>

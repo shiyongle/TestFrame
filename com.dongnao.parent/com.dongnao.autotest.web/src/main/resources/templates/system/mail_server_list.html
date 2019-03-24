@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>邮件服务器列表</title>
+<div th:include="/include/header :: header"></div>
+</head>
+<body>
+	<div class="easyui-panel" title="邮件服务器信息" data-options="fit:true">
+		<table class="easyui-datagrid"
+			data-options="fit:true,toolbar:'#grid_toolbar'" idField="id"
+			remoteSort="true" multiSort="true" sortName="createOn" sortOrder="desc"
+			striped="true" fitColumns="true" nowrap="false" rownumbers="true"
+			singleSelect="true" pagination="true" pageSize="20">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true"></th>
+					<th
+						data-options="field:'host',width:100,align:'center',sortable:true">服务器</th>
+					<th data-options="field:'port',width:100,sortable:true">端口</th>
+					<th
+						data-options="field:'userName',width:100,align:'center',sortable:true">用户名</th>
+					<th
+						data-options="field:'from',width:100,align:'center',sortable:true">发送人</th>
+					<th
+						data-options="field:'fromName',width:100,align:'center',sortable:true">发送人名称</th>
+					<th
+						data-options="field:'default',width:60,align:'center',sortable:true">默认</th>
+					<th
+						data-options="field:'createOn',width:100,align:'center',sortable:true,formatter:formatDateTime">创建时间</th>
+					<th
+						data-options="field:'modifyOn',width:100,align:'center',sortable:true,formatter:formatDateTime">修改时间</th>
+					<th
+						data-options="field:'remark',width:100,align:'center',sortable:true">备注</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="grid_toolbar" style="padding: 2px 5px; float: right;">
+			<div class="easyui-panel"
+				style="padding: 5px; border: none; width: 100%;">
+				<a href="javascript:;" id="btnAdd" onclick="btnAdd_Click(this);"
+					class="easyui-linkbutton" data-options="iconCls:'icon-add'">新增</a>
+				<a href="javascript:;" id="btnUpdate"
+					onclick="btnUpdate_Click(this);" class="easyui-linkbutton"
+					data-options="iconCls:'icon-scriptedit'">修改</a> <a
+					href="javascript:;" id="btnDelete" onclick="btnDelete_Click(this);"
+					class="easyui-linkbutton" data-options="iconCls:'icon-decline'">删除</a>
+				<a href="javascript:;" class="easyui-menubutton"
+					data-options="menu:'#dataGridFind',iconCls:'icon-magnifier'">查询</a>
+				<a href="javascript:;"
+					onclick="btnRefresh_Click(this, $('.easyui-datagrid'));"
+					class="easyui-linkbutton"
+					data-options="iconCls:'icon-arrowrefresh'">刷新</a>
+			</div>
+			<div id="dataGridFind" style="width: 100px;">
+				<div data-options="iconCls:'icon-magnifier'"
+					onclick="btnCheck_Click(this, $('.easyui-datagrid'));">单页查询</div>
+				<div data-options="iconCls:'icon-zoom'" onclick="winComplex.show();">高级查询</div>
+				<div data-options="iconCls:'icon-magifierzoomout'">组合查询</div>
+			</div>
+		</div>
+	</div>
+	<div id="winEdit" class="easyui-window" data-options="closed:true"
+		title=" ">
+		<div style="padding: 20px">
+			<form id="winForm" method="post">
+				<input type="hidden" name="_method" />
+				<input type="hidden" name="id" />
+				<input type="hidden" name="createOn" />
+				<!-- 				<input type="hidden" name="modifyOn" /> -->
+				<table cellpadding="5" style="width: 100%">
+					<tr>
+						<td style="text-align: right;"><font color='red'>*</font>
+							服务器:</td>
+						<td><input type="text" name="host" style="width: 80%;"
+								class="easyui-textbox"
+								data-options="required:true,validType:['length[0, 64]']" /></td>
+						<td style="text-align: right;"><font color='red'>*</font> 端口:</td>
+						<td style="width: 342px"><input type="text" name="port" style="width: 80%;"
+								class="easyui-numberbox"
+								data-options="required:true,validType:['length[0, 5]']" /></td>
+					</tr>
+					<tr>
+						<td style="text-align: right;"><font color='red'>*</font>用户名:</td>
+						<td><input type="text" name="userName" style="width: 80%;"
+								class="easyui-textbox"
+								data-options="required:true,validType:['length[0, 64]']" /></td>
+						<td style="text-align: right;"><font color='red'>*</font>密码:</td>
+						<td><input type="text" name="password" style="width: 80%;"
+								class="easyui-passwordbox"
+								data-options="required:true,validType:['length[0, 128]']" /></td>
+					</tr>
+					<tr>
+						<td style="text-align: right;"><font color='red'>*</font>发件人:</td>
+						<td><input type="text" name="from" style="width: 80%;"
+								class="easyui-textbox"
+								data-options="required:true,validType:['length[0, 64]','email']" /></td>
+						<td style="text-align: right;"><font color='red'>*</font>发件人名称:</td>
+						<td><input type="text" name="fromName" style="width: 80%;"
+								class="easyui-textbox"
+								data-options="required:true,validType:['length[0, 64]']" /></td>
+					</tr>
+					<tr>
+						<td style="text-align: right;"><font color='red'>*</font>开启SSL:</td>
+						<td><input name="ssl" class="easyui-switchbutton"
+								value="true" checked></td>
+						<td style="text-align: right;"><font color='red'>*</font>是否默认:</td>
+						<td><input name="default" class="easyui-switchbutton"
+								value="true" checked></td>
+					</tr>
+					<tr>
+						<td style="text-align: right;">备&nbsp;&nbsp;注:</td>
+						<td colspan="3"><input name="remark" class="easyui-textbox"
+								style="width: 80%; height: 60px"
+								data-options="multiline:true,validType:['length[0, 256]']" /></td>
+					</tr>
+				</table>
+			</form>
+			<div style="text-align: center; padding: 5px">
+				<a href="javascript:void(0)" class="easyui-linkbutton"
+					data-options="iconCls:'icon-disk'"
+					onclick="return btnSave_Click(this);">保存</a> <a
+					href="javascript:void(0)" class="easyui-linkbutton"
+					data-options="iconCls:'icon-cancel'"
+					onclick="$('#winEdit').window('close');">取消</a>
+			</div>
+		</div>
+	</div>
+
+	<div th:include="/include/footer :: footer"></div>
+	<script type="text/javascript" th:inline="javascript">
+	//<![CDATA[
+	var queryParams = {};
+	var winEdit = $("#winEdit");
+	var winForm = $("#winForm");
+	var dataGrid = $(".easyui-datagrid");
+	
+	function loadGrid() {
+	  dataGrid.datagrid("clearSelections");
+	  var options = dataGrid.datagrid('options');
+	  dataGrid.datagrid({
+	    method: "GET",
+	    url: "/system/mailServers/paged",
+	    queryParams: queryParams,
+	    onBeforeLoad: function(param) {
+	      onBeforeLoad(param, options.pageSize);
+	    }
+	  });
+	}
+	var btnAdd_Click = function(sender, e) {
+	  // winForm.form("clear");
+	  winEdit.window("setTitle", "新增服务器信息");
+	  // 	  winEdit.setIconCls($(sender).linkbutton("options").iconCls);
+	  winEdit.window("open")
+	};
+	var btnUpdate_Click = function(sender, e) {
+	  var selectRows = dataGrid.datagrid("getSelections");
+	  if (selectRows.length != 1) {
+	    dialogWarning("请选择一项数据进行修改！");
+	    return;
+	  }
+	  var record = selectRows[0];
+	  if (record) {
+	    winForm.form("clear")
+	    winForm.form("load", record);
+	    $("#password2").textbox("setValue", record.password);
+	  }
+	  $("input[name='_method']").val("PUT");
+	  winEdit.window("setTitle", "修改服务器信息");
+	  // 	  winEdit.setIconCls($(sender).linkbutton("options").iconCls);
+	  winEdit.window("open");
+	};
+	var btnSave_Click = function(sender, e) {
+	  showLoading();
+	  winForm.form('submit', {
+	    url: "/system/mailServer",
+	    onSubmit: function(param) {
+	      var isValid = $(this).form('validate');
+	      if (!isValid) {
+	        hideLoading();
+	      }
+	      return isValid;
+	    },
+	    success: function(data) {
+	      hideLoading();
+	      var json = eval("(" + data + ")");
+	      showMessage(json.message);
+	
+	      loadGrid();
+	      winEdit.window("close");
+	    }
+	  });
+	};
+	var btnDelete_Click = function(sender, e) {
+	  var selectRows = dataGrid.datagrid("getSelections");
+	  if (selectRows.length != 1) {
+	    dialogWarning("请选择一项数据进行删除！");
+	    return;
+	  }
+	  var record = selectRows[0];
+	  $.messager.confirm("温馨提示", "确定要删除吗？", function(r) {
+	    if (!r)
+	      return;
+	    showLoading();
+	    $.ajax({
+	      url: "/system/mailServer?id=" + record.id,
+	      type: "DELETE",
+	      cache: false,
+	      dataType: "json",
+	      // 	      data: {
+	      // 	        id: record.id
+	      // 	      },
+	      success: function(data, statusText) {
+	        hideLoading();
+	
+	        loadGrid();
+	        showMessage(data.message);
+	      },
+	      error: function(XMLHttpRequest, textStatus, errorThrown) {
+	        hideLoading();
+	      // 	        ajaxErrorDialog(errorThrown);
+	      }
+	    });
+	  });
+	};
+	$(function() {
+	  loadGrid();
+	});
+	//]]>
+	</script>
+</body>
+</html>

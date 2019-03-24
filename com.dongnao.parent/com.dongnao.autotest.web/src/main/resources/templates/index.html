@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>自动化测试平台</title>
+<style type="text/css">
+.topbar {
+	background-image: url(/static/imgs/topbg.jpg);
+}
+
+.menubtn {
+	background-image: url(images/menubtn.jpg);
+}
+
+.tree-folder {
+	background-position-x: 0px;
+}
+
+.tree-file {
+	background-position-x: 0px;
+}
+</style>
+<div th:include="/include/header :: header"></div>
+</head>
+<body>
+	<div class="easyui-layout" data-options="fit:true">
+		<div data-options="region:'north',split:true" style="height: 57px">
+			<div class="topbar">
+				<table cellspacing="0" cellpadding="0" width="100%" border="0">
+					<tr style="height: 50px;">
+						<td>&nbsp;</td>
+						<td valign="middle" style="width: 500px">
+							<table style="width: 100%;" cellspacing="0" cellpadding="0"
+								border="0">
+								<tr>
+									<td><span style="color: #ffffff">在线人数: </span>
+										<div id="lblOnlineNum" style="display: inline; color: red;">1</div>
+									</td>
+									<td>
+										<div style="padding: 5px;">
+											<a href="#" class="easyui-splitbutton"
+												style="background-color: #ffffff;"
+												data-options="menu:'#mnu_subject',iconCls:'icon-stylego',plain:true">切换主题</a>
+											<a href="#" class="easyui-splitbutton"
+												style="background-color: #ffffff;"
+												data-options="menu:'#mnu_skin',iconCls:'icon-shield'">切换皮肤</a>
+											<a href="#" class="easyui-splitbutton"
+												style="background-color: #ffffff"
+												data-options="menu:'#mnu_help',iconCls:'icon-awardstaradd'">你提我改</a>
+											<a href="javascript:void(0);"
+												onclick="btnLogout_Click(this);"
+												class="btn-logout easyui-splitbutton"
+												style="background-color: #ffffff"
+												data-options="menu:'#mnu_exit',iconCls:'icon-decline'">注销</a>
+										</div>
+										<div id="mnu_subject">
+											<div subject="/home/main"
+												data-options="iconCls:'icon-binempty'">传统主题</div>
+											<div subject="/home/mainsutra"
+												data-options="iconCls:'icon-binempty'">经典主题</div>
+											<div subject="/home/mainWindows"
+												data-options="iconCls:'icon-bookmark'">Windows</div>
+										</div>
+										<div id="mnu_skin">
+											<div onclick="btnTheme_Select('default');"
+												data-options="iconCls:'icon-book'">默认</div>
+											<div onclick="btnTheme_Select('bootstrap');"
+												data-options="iconCls:'icon-pencil'">Bootstrap</div>
+											<div onclick="btnTheme_Select('gray');"
+												data-options="iconCls:'icon-binempty'">Gray</div>
+										</div>
+										<div id="mnu_help">
+											<div data-options="iconCls:'icon-help'">系统帮助</div>
+										</div>
+										<div id="mnu_exit">
+											<div data-options="iconCls:'icon-groupedit'">修改密码</div>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div data-options="region:'south',split:true" class="panel-title"
+			style="height: 30px; overflow: hidden">
+			<div style="float: left; padding: 4px 0 0 4px;">操作员:
+				@loginUser.LoginName</div>
+			<div style="float: right; padding: 4px 0 0 4px;">@ViewBag.ClientIP
+				| @ViewBag.Version</div>
+		</div>
+		<div data-options="region:'west',split:true" title=" "
+			style="width: 220px;">
+			<div class="easyui-panel" title="系统菜单"
+				data-options="tools:'#pan_tool'">
+				<ul class="easyui-tree"
+					data-options="fit:true,method:'POST',animate: true"></ul>
+			</div>
+			<div id="pan_tool">
+				<a href="javascript:;" title="展开所有" class="icon-expand-all"
+					onclick="$('.easyui-tree').tree('expandAll');"></a> <a
+					href="javascript:;" title="收缩所有" class="icon-collapse-all"
+					onclick="$('.easyui-tree').tree('collapseAll');"></a> <a
+					href="javascript:;" title="重新加载" class="icon-arrowrefresh"
+					onclick="$('.easyui-tree').tree('reload');"></a>
+			</div>
+		</div>
+		<div class="main-center" data-options="region:'center'"
+			title="当前位置：桌面">
+			<div id="main-tabPanel" class="easyui-tabs"
+				data-options="fit:true,border:false,plain:true,tools:'#main-tabPanel-tools'">
+				<div title="桌面" data-options="iconCls:'icon-man'"
+					style="padding: 10px">
+					<iframe id="contentPage" src="about:blank"
+						style="width: 100%; height: 100%;" frameborder="0"
+						marginheight="0" marginwidth="0"></iframe>
+				</div>
+			</div>
+			<div id="main-tabPanel-tools">
+				<a href="javascript:void(0)" class="easyui-linkbutton"
+					data-options="plain:true,iconCls:'icon-reload'" onclick="reload();"
+					title="刷新">刷新</a>
+			</div>
+		</div>
+		<div id="main-tab-contextMenu" class="easyui-menu"
+			style="width: 150px; display: none;">
+			<div class="refresh" data-options="iconCls:'icon-arrowrefresh'">刷新</div>
+			<div class="menu-sep"></div>
+			<div class="close" data-options="iconCls:'icon-tabdelete'">关闭</div>
+			<!--<div class="close-all icon-applicationdelete">
+            全部关闭</div>-->
+			<div class="close-other"
+				data-options="iconCls:'icon-applicationosxdelete'">除此之外全部关闭</div>
+			<div class="menu-sep"></div>
+			<div class="close-right"
+				data-options="iconCls:'icon-applicationsideexpand'">当前页右侧全部关闭</div>
+			<div class="close-left"
+				data-options="iconCls:'icon-applicationsidecontract'">当前页左侧全部关闭</div>
+			<!--<div class="exit">
+            退出</div>-->
+		</div>
+	</div>
+
+	<div th:include="/include/footer :: footer"></div>
+	<script type="text/javascript" th:inline="javascript">
+	window.mode = "true" == "@(ViewBag.Mode)".toLowerCase() ? true : false;
+	//#region 添加选项卡
+	function addTab(subTitle, url, icon) {
+	  var tabPanel = $("#main-tabPanel");
+	
+	  if (!tabPanel.tabs('exists', subTitle)) {
+	    tabPanel.tabs('add', {
+	      title: subTitle,
+	      content: createFrame(url),
+	      closable: true,
+	      iconCls: icon,
+	      cache: false,
+	      bodyCls: "overflow"
+	    });
+	  } else {
+	    tabPanel.tabs('select', subTitle);
+	    var curTab = tabPanel.tabs('getSelected');
+	    tabPanel.tabs('update', {
+	      tab: curTab,
+	      options: {
+	        content: createFrame(url)
+	      }
+	    });
+	  }
+	  bindTab();
+	}
+	//#endregion
+	
+	function createFrame(url) {
+	  //url = url + "?rd=" + Math.random();
+	  var s = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
+	  return s;
+	}
+	
+	//#region 绑定tab事件和菜单
+	function bindTab() {
+	  var tabContextMenu = $("#main-tab-contextMenu");
+	  /*双击关闭TAB选项卡*/
+	  //            $(".tabs-inner").dblclick(function () {
+	  //                var subtitle = $(this).children(".tabs-closable").text();
+	  //                $('#tabs').tabs('close', subtitle);
+	  //            });
+	  /*为选项卡绑定右键*/
+	  $(".tabs-inner").bind('contextmenu', function(e) {
+	    tabContextMenu.menu('show', {
+	      left: e.pageX,
+	      top: e.pageY
+	    });
+	
+	    var subTitle = $(this).children(".tabs-closable").text();
+	
+	    tabContextMenu.data("currtab", subTitle);
+	    $('#main-tabPanel').tabs('select', subTitle);
+	    return false;
+	  });
+	}
+	//#endregion
+	//#region 绑定右键菜单事件
+	function bindContextMenuEvent() {
+	  var tabPanel = $("#main-tabPanel");
+	  var tabContextMenu = $("#main-tab-contextMenu");
+	  //#region 刷新
+	  tabContextMenu.find(".refresh").click(function() {
+	    var curTab = tabPanel.tabs('getSelected');
+	    var url = $(curTab.panel('options').content).attr('src');
+	    if (url == undefined)
+	      url = $("#contentPage").attr("src");
+	    tabPanel.tabs('update', {
+	      tab: curTab,
+	      options: {
+	        content: createFrame(url)
+	      }
+	    })
+	  });
+	  //#endregion
+	  ///#region 关闭当前
+	  tabContextMenu.find(".close").click(function() {
+	    var curtab_title = tabContextMenu.data("currtab");
+	    tabPanel.tabs('close', curtab_title);
+	  })
+	  //#endregion
+	  //全部关闭
+	  tabContextMenu.find(".close-all").click(function() {
+	    $('.tabs-inner span').each(function(i, n) {
+	      var t = $(n).text();
+	      tabPanel.tabs('close', t);
+	    });
+	  });
+	  //关闭除当前之外的TAB
+	  tabContextMenu.find(".close-other").click(function() {
+	    tabContextMenu.find(".close-right").click();
+	    tabContextMenu.find(".close-left").click();
+	  });
+	  //关闭当前右侧的TAB
+	  tabContextMenu.find(".close-right").click(function() {
+	    var nextall = $('.tabs-selected').nextAll();
+	    if (nextall.length == 0) {
+	      //alert('后边没有啦~~');
+	      return false;
+	    }
+	    nextall.each(function(i, n) {
+	      var t = $('a:eq(0) span', $(n)).text();
+	      tabPanel.tabs('close', t);
+	    });
+	    return false;
+	  });
+	  //关闭当前左侧的TAB
+	  tabContextMenu.find(".close-left").click(function() {
+	    var prevall = $('.tabs-selected').prevAll();
+	    if (prevall.length == 0) {
+	      //alert('到头了，前边没有啦~~');
+	      return false;
+	    }
+	    prevall.each(function(i, n) {
+	      var t = $('a:eq(0) span', $(n)).text();
+	      if (t != "桌面")
+	        tabPanel.tabs('close', t);
+	    });
+	    return false;
+	  });
+	  //退出
+	  tabContextMenu.find(".exit").click(function() {
+	    tabContextMenu.menu('hide');
+	  })
+	}
+	//#endregion
+	//#region 刷新当前页
+	function reload() {
+	  var tabPanel = $("#main-tabPanel");
+	  var curTab = tabPanel.tabs('getSelected');
+	  var url = $(curTab.panel('options').content).attr('src');
+	  if (url == undefined)
+	    url = $("#contentPage").attr("src");
+	  tabPanel.tabs('update', {
+	    tab: curTab,
+	    options: {
+	      content: createFrame(url)
+	    }
+	  })
+	}
+	//#endregion
+	
+	function getBread(tree, target, textes) {
+	  var parent = tree.tree("getParent", target);
+	  if (parent) {
+	    textes.push(parent.text);
+	    getBread(tree, parent.target, textes);
+	  }
+	  return false;
+	}
+	$(function() {
+	  bindTab();
+	  bindContextMenuEvent();
+	
+	  var tree = $(".easyui-tree");
+	  //#region 树
+	  tree.tree({
+	    url: "/static/js/index_tree.json",
+	    method: "GET",
+	    onLoadSuccess: function(node, data) {
+	      //var root = tree.tree('find', 0);
+	      //tree.tree("select", root.target);
+	    },
+	    onSelect: function(node) {
+	      var permission = node.attributes; // eval("(" + node.attributes + ")");
+	      if (permission.href.length > 0) {
+	        var textes = [];
+	        textes.push(node.text);
+	        getBread(tree, node.target, textes);
+	        $(".main-center").panel("setTitle", "<span style='color:#143B5A'>当前位置：" + textes.reverse().join(" → ") + "</span>");
+	        addTab(node.text, permission.href, node.iconCls);
+	      }
+	    },
+	    onDblClick: function(node) {
+	      if (node.state == "open")
+	        tree.tree("collapse", node.target);
+	      else
+	       tree.tree("expand", node.target);
+	    }
+	  });
+	  //#endregion
+	
+	  $("#mnu_subject").find("div").bind("click", function() {
+	    document.location = $(this).attr("subject") + "?url=" + Math.random();
+	  });
+	});
+	</script>
+</body>
+</html>

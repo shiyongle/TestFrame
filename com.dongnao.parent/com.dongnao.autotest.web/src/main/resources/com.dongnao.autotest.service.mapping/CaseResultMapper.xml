@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dongnao.autotest.service.mapper.CaseResultMapper">
+	<resultMap id="BaseResultMap" type="java.util.Map">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="groupId" property="groupId" jdbcType="INTEGER" />
+		<result column="caseId" property="caseId" jdbcType="INTEGER" />
+		<result column="batchNo" property="batchNo" jdbcType="VARCHAR" />
+		<result column="success" property="success" jdbcType="BIT" />
+		<result column="fromOn" property="fromOn" jdbcType="TIMESTAMP" />
+		<result column="toOn" property="toOn" jdbcType="TIMESTAMP" />
+		<result column="totalMill" property="totalMill" jdbcType="BIGINT" />
+		<result column="snapshotUrl" property="snapshotUrl" jdbcType="VARCHAR" />
+		<result column="createBy" property="createBy" jdbcType="VARCHAR" />
+		<result column="createOn" property="createOn" jdbcType="TIMESTAMP" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Table_Name">
+		`t_case_result`
+	</sql>
+	<sql id="Base_Column_List">
+		id, groupId, caseId, batchNo, success, fromOn, toOn,
+		totalMill,
+		snapshotUrl,
+		createBy,
+		createOn,
+		remark
+	</sql>
+	<sql id="Table_Name_4Join">
+		(SELECT a.*, b.name AS groupName, c.name AS caseName FROM
+		t_case_result a
+		LEFT OUTER JOIN t_case_group b ON a.groupId = b.id
+		LEFT
+		OUTER JOIN t_case_case c ON a.caseId = c.id
+		) tbl
+	</sql>
+	<sql id="Where_List">
+		<if test="groupId != null">
+			AND groupId = #{groupId,jdbcType=INTEGER}
+		</if>
+		<if test="caseId != null">
+			AND caseId = #{caseId,jdbcType=INTEGER}
+		</if>
+		<if test="batchNo != null and batchNo.length() > 0">
+			AND batchNo = #{batchNo,jdbcType=VARCHAR}
+		</if>
+		<if test="remark_lk != null and remark_lk.length() > 0">
+			AND remark LIKE CONCAT('%', #{remark_lk,jdbcType=VARCHAR},
+			'%')
+		</if>
+		<if test="id_ne != null and id_ne.length() > 0">
+			AND id != #{id_ne,jdbcType=VARCHAR}
+		</if>
+		<if test="idList != null">
+			AND id IN
+			<foreach collection="list" index="index" item="item" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</sql>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id"
+		parameterType="java.util.Map">
+		INSERT INTO
+		<include refid="Table_Name" />
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="groupId != null">
+				groupId,
+			</if>
+			<if test="caseId != null">
+				caseId,
+			</if>
+			<if test="batchNo != null">
+				batchNo,
+			</if>
+			<if test="success != null">
+				success,
+			</if>
+			<if test="fromOn != null">
+				fromOn,
+			</if>
+			<if test="toOn != null">
+				toOn,
+			</if>
+			<if test="totalMill != null">
+				totalMill,
+			</if>
+			<if test="snapshotUrl != null">
+				snapshotUrl,
+			</if>
+			<if test="createBy != null">
+				createBy,
+			</if>
+			<if test="createOn != null">
+				createOn,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="groupId != null">
+				#{groupId,jdbcType=INTEGER},
+			</if>
+			<if test="caseId != null">
+				#{caseId,jdbcType=INTEGER},
+			</if>
+			<if test="batchNo != null">
+				#{batchNo,jdbcType=VARCHAR},
+			</if>
+			<if test="success != null">
+				#{success,jdbcType=BIT},
+			</if>
+			<if test="fromOn != null">
+				#{fromOn,jdbcType=TIMESTAMP},
+			</if>
+			<if test="toOn != null">
+				#{toOn,jdbcType=TIMESTAMP},
+			</if>
+			<if test="totalMill != null">
+				#{totalMill,jdbcType=BIGINT},
+			</if>
+			<if test="snapshotUrl != null">
+				#{snapshotUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="createOn != null">
+				#{createOn,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="update" parameterType="java.util.Map">
+		UPDATE
+		<include refid="Table_Name" />
+		<set>
+			<if test="groupId != null">
+				groupId = #{groupId,jdbcType=INTEGER},
+			</if>
+			<if test="caseId != null">
+				caseId = #{caseId,jdbcType=INTEGER},
+			</if>
+			<if test="batchNo != null">
+				batchNo = #{batchNo,jdbcType=VARCHAR},
+			</if>
+			<if test="success != null">
+				success = #{success,jdbcType=BIT},
+			</if>
+			<if test="fromOn != null">
+				fromOn = #{fromOn,jdbcType=TIMESTAMP},
+			</if>
+			<if test="toOn != null">
+				toOn = #{toOn,jdbcType=TIMESTAMP},
+			</if>
+			<if test="totalMill != null">
+				totalMill = #{totalMill,jdbcType=BIGINT},
+			</if>
+			<if test="snapshotUrl != null">
+				snapshotUrl = #{snapshotUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="createBy != null">
+				createBy = #{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="createOn != null">
+				createOn = #{createOn,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="rubbish" parameterType="java.lang.Integer">
+		UPDATE
+		<include refid="Table_Name" />
+		SET rubbish = 1 WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="rubbishBatch" parameterType="java.util.List">
+		UPDATE
+		<include refid="Table_Name" />
+		SET rubbish = 1 WHERE id IN
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<delete id="delete" parameterType="java.lang.Integer">
+		DELETE FROM
+		<include refid="Table_Name" />
+		WHERE id = #{id,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteBatch" parameterType="java.util.List">
+		DELETE FROM
+		<include refid="Table_Name" />
+		WHERE id IN
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<select id="selectById" resultType="map" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		<include refid="Table_Name" />
+		WHERE id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectList" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		*
+		FROM
+		<include refid="Table_Name_4Join" />
+		<where>
+			<include refid="Where_List" />
+		</where>
+		ORDER BY createOn ASC
+	</select>
+	<select id="selectPaged" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		*
+		FROM
+		<include refid="Table_Name_4Join" />
+		<where>
+			<include refid="Where_List" />
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy != null and orderBy.length > 0">
+				${orderBy}
+			</when>
+			<otherwise>
+				createOn DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- ↓↓↓↓↓↓↓↓↓↓ 扩展方法 ↓↓↓↓↓↓↓↓↓↓ -->
+	<select id="selectAll" resultType="java.util.Map">
+		SELECT *
+		FROM
+		<include refid="Table_Name_4Join" />
+		ORDER BY createOn ASC;
+	</select>
+	<select id="countSuccess" resultType="java.util.Map">
+		SELECT success, COUNT(1) AS count FROM
+		<include refid="Table_Name" />
+		<where>
+			<include refid="Where_List" />
+		</where>
+		GROUP BY success
+	</select>
+	<!-- ↑↑↑↑↑↑↑↑↑↑ 扩展方法 ↑↑↑↑↑↑↑↑↑↑ -->
+</mapper>

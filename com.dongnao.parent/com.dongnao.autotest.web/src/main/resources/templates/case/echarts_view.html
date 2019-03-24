@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>图表</title>
+<div th:include="/include/header :: header"></div>
+</head>
+<body style="height: 400px;">
+		<div id="container" style="height: 100%"></div>
+	
+	<div th:include="/include/footer :: footer"></div>
+	<script type="text/javascript" src="/static/js/echarts/4.2.0/echarts.min.js"></script>
+	<script type="text/javascript" th:inline="javascript">
+	//<![CDATA[
+	function showChart(myChart, data) {
+		var option = {
+		    title: {
+		        text: '用例统计图表',
+		        subtext: '执行结果统计',
+		        left: 'center'
+		    },
+		    tooltip : {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b} : {c} ({d}%)"
+		    },
+		    color:['red', 'green'],
+		    legend: {
+		        // orient: 'vertical',
+		        // top: 'middle',
+		        bottom: 10,
+		        left: 'center',
+		        data: ['成功', '失败']
+		    },
+		    series : [
+		        {
+		            type: 'pie',
+		            radius : '65%',
+		            center: ['50%', '50%'],
+		            selectedMode: 'single',
+		            data: data,
+		            itemStyle: {
+		                emphasis: {
+		                    shadowBlur: 10,
+		                    shadowOffsetX: 0,
+		                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+		                }
+		            }
+		        }
+		    ]
+		};
+		if (option && typeof option === "object") {
+		    myChart.setOption(option, true);
+		}
+	}
+	function getParameter(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
+	$(function() {
+		var dom = document.getElementById("container");
+		var myChart = echarts.init(dom);
+		var caseId = getParameter("caseId");
+		$.ajax({
+			url: "/case/result/count",
+		      type: "GET",
+		      cache: false,
+		      dataType: "json",
+      	      data: {
+      	    	caseId: caseId
+      	      },
+		      success: function(data, statusText) {
+		    	  showChart(myChart, data.data);
+		      },
+		      error: function(XMLHttpRequest, textStatus, errorThrown) {
+		      }
+		});
+	});
+	//]]>
+	</script>
+</body>
+</html>

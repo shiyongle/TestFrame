@@ -1,0 +1,76 @@
+[
+	{
+		"id": 1001,
+		"text": "用例上传",
+		"attributes": {
+			"href": "/case/case_upload",
+			"iconCls": ""
+		}
+	},
+	{
+		"id": 1002,
+		"text": "分组管理",
+		"attributes": {
+			"href": "/case/group_list",
+			"iconCls": ""
+		}
+	},
+	{
+		"id": 1003,
+		"text": "用例管理",
+		"attributes": {
+			"href": "/case/case_list",
+			"iconCls": ""
+		}
+	},
+	{
+		"id": 1004,
+		"text": "统计分析",
+		"attributes": {
+			"href": "/case/case_result_list",
+			"iconCls": ""
+		}
+	},
+	{
+		"id": 1005,
+		"text": "系统配置",
+		"attributes": {
+			"href": "javascript:;",
+			"iconCls": ""
+		},
+		"children": [
+			{
+				"id": 100501,
+				"text": "数据字典",
+				"attributes": {
+					"href": "/system/dict_list",
+					"iconCls": ""
+				}
+			},
+			{
+				"id": 100502,
+				"text": "邮件设置",
+				"attributes": {
+					"href": "/system/mail_server_list",
+					"iconCls": ""
+				}
+			},
+			{
+				"id": 100503,
+				"text": "系统设置",
+				"attributes": {
+					"href": "/system/system_config_list",
+					"iconCls": ""
+				}
+			}
+		]
+	},
+	{
+		"id": 1006,
+		"text": "接口测试",
+		"attributes": {
+			"href": "/case/api_list",
+			"iconCls": ""
+		}
+	}
+]

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+	<!-- 上下文名称 -->
+	<contextName>com.dongnao.autotest.web</contextName>
+	<!-- 文件输出格式 -->
+	<property name="PATTERN"
+		value="%-12(%d{yyyy-MM-dd HH:mm:ss.SSS}) |-%-5level [%thread] %c [%L] -| %msg%n" />
+	<!-- test环境日志路径 -->
+	<property name="TEST_FILE_PATH" value="/usr/local/logs" />
+
+	<!-- LEVEL级别(默认为:DEBUG)：TRACE, DEBUG, INFO, WARN, ERROR, ALL和OFF -->
+	<!-- Default环境 -->
+	<springProfile name="default">
+		<appender name="DEFAULT-Console" class="ch.qos.logback.core.ConsoleAppender">
+			<!-- 对日志进行格式化 -->
+			<encoder>
+				<pattern>${PATTERN}</pattern>
+			</encoder>
+		</appender>
+
+		<logger name="com.roncoo.education" level="DEBUG" />
+
+		<root level="INFO">
+			<appender-ref ref="DEFAULT-Console" />
+		</root>
+	</springProfile>
+	
+	<!-- 开发环境 -->
+	<springProfile name="dev">
+		<appender name="DEV-Console" class="ch.qos.logback.core.ConsoleAppender">
+			<!-- 对日志进行格式化 -->
+			<encoder>
+				<pattern>${PATTERN}</pattern>
+			</encoder>
+		</appender>
+
+		<logger name="com.roncoo.education" level="DEBUG" />
+
+		<root level="INFO">
+			<appender-ref ref="DEV-Console" />
+		</root>
+	</springProfile>
+
+	<!-- 测试环境 -->
+	<springProfile name="test">
+		<!-- 每天产生一个文件 -->
+		<appender name="TEST-File"
+			class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<!-- 文件路径 -->
+			<file>${TEST_FILE_PATH}</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<!-- 文件名称 -->
+				<fileNamePattern>${TEST_FILE_PATH}/info.%d{yyyy-MM-dd}.log
+				</fileNamePattern>
+				<!-- 文件最大保存历史数量 -->
+				<MaxHistory>100</MaxHistory>
+			</rollingPolicy>
+
+			<layout class="ch.qos.logback.classic.PatternLayout">
+				<pattern>${PATTERN}</pattern>
+			</layout>
+		</appender>
+
+		<root level="info">
+			<appender-ref ref="TEST-File" />
+		</root>
+	</springProfile>
+</configuration>  

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dongnao.autotest.service.mapper.MailServerMapper">
+	<resultMap id="BaseResultMap" type="java.util.Map">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="host" property="host" jdbcType="VARCHAR" />
+		<result column="port" property="port" jdbcType="INTEGER" />
+		<result column="userName" property="userName" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="from" property="from" jdbcType="VARCHAR" />
+		<result column="fromName" property="fromName" jdbcType="VARCHAR" />
+		<result column="ssl" property="ssl" jdbcType="BIT" />
+		<result column="default" property="default" jdbcType="BIT" />
+		<result column="createBy" property="createBy" jdbcType="VARCHAR" />
+		<result column="createOn" property="createOn" jdbcType="TIMESTAMP" />
+		<result column="modifyBy" property="modifyBy" jdbcType="VARCHAR" />
+		<result column="modifyOn" property="modifyOn" jdbcType="TIMESTAMP" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Table_Name">
+		`t_mail_server`
+	</sql>
+	<sql id="Base_Column_List">
+		id, `host`, `port`, userName, `password`, `from`, fromName, `ssl`,
+		`default`,
+		createBy,
+		createOn, modifyBy,
+		modifyOn, remark
+	</sql>
+	<sql id="Where_List">
+		<if test="host != null and host.length() > 0">
+			AND `host` = #{host,jdbcType=VARCHAR}
+		</if>
+		<if test="host_lk != null and host_lk.length() > 0">
+			AND `host` LIKE CONCAT('%', #{host_lk,jdbcType=VARCHAR},
+			'%')
+		</if>
+		<if test="default != null">
+			AND `default` = #{default,jdbcType=BIT}
+		</if>
+		<if test="remark_lk != null and remark_lk.length() > 0">
+			AND remark LIKE CONCAT('%', #{remark_lk,jdbcType=VARCHAR},
+			'%')
+		</if>
+		<if test="id_ne != null and id_ne.length() > 0">
+			AND id != #{id_ne,jdbcType=VARCHAR}
+		</if>
+		<if test="idList != null">
+			AND id IN
+			<foreach collection="list" index="index" item="item" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</sql>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id"
+		parameterType="java.util.Map">
+		INSERT INTO
+		<include refid="Table_Name" />
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="host != null">
+				`host`,
+			</if>
+			<if test="port != null">
+				`port`,
+			</if>
+			<if test="userName != null">
+				userName,
+			</if>
+			<if test="password != null">
+				`password`,
+			</if>
+			<if test="from != null">
+				`from`,
+			</if>
+			<if test="fromName != null">
+				fromName,
+			</if>
+			<if test="ssl != null">
+				`ssl`,
+			</if>
+			<if test="default != null">
+				`default`,
+			</if>
+			<if test="createBy != null">
+				createBy,
+			</if>
+			<if test="createOn != null">
+				createOn,
+			</if>
+			<if test="modifyBy != null">
+				modifyBy,
+			</if>
+			<if test="modifyOn != null">
+				modifyOn,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="host != null">
+				#{host,jdbcType=VARCHAR},
+			</if>
+			<if test="port != null">
+				#{port,jdbcType=INTEGER},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="from != null">
+				#{from,jdbcType=VARCHAR},
+			</if>
+			<if test="fromName != null">
+				#{fromName,jdbcType=VARCHAR},
+			</if>
+			<if test="ssl != null">
+				#{ssl,jdbcType=BIT},
+			</if>
+			<if test="default != null">
+				#{default,jdbcType=BIT},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="createOn != null">
+				#{createOn,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyBy != null">
+				#{modifyBy,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyOn != null">
+				#{modifyOn,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="update" parameterType="java.util.Map">
+		UPDATE
+		<include refid="Table_Name" />
+		<set>
+			<if test="host != null">
+				`host` = #{host,jdbcType=VARCHAR},
+			</if>
+			<if test="port != null">
+				`port` = #{port,jdbcType=INTEGER},
+			</if>
+			<if test="userName != null">
+				userName = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				`password` = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="from != null">
+				`from` = #{from,jdbcType=VARCHAR},
+			</if>
+			<if test="fromName != null">
+				fromName = #{fromName,jdbcType=VARCHAR},
+			</if>
+			<if test="ssl != null">
+				`ssl` = #{ssl,jdbcType=BIT},
+			</if>
+			<if test="default != null">
+				`default` = #{default,jdbcType=BIT},
+			</if>
+			<if test="createBy != null">
+				createBy = #{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="createOn != null">
+				createOn = #{createOn,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyBy != null">
+				modifyBy = #{modifyBy,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyOn != null">
+				modifyOn = #{modifyOn,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="rubbish" parameterType="java.lang.Integer">
+		UPDATE
+		<include refid="Table_Name" />
+		SET rubbish = 1 WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="rubbishBatch" parameterType="java.util.List">
+		UPDATE
+		<include refid="Table_Name" />
+		SET rubbish = 1 WHERE id IN
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<delete id="delete" parameterType="java.lang.Integer">
+		DELETE FROM
+		<include refid="Table_Name" />
+		WHERE id = #{id,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteBatch" parameterType="java.util.List">
+		DELETE FROM
+		<include refid="Table_Name" />
+		WHERE id IN
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<select id="selectById" resultType="map" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		<include refid="Table_Name" />
+		WHERE id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectList" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		<include refid="Table_Name" />
+		<where>
+			<include refid="Where_List" />
+		</where>
+		ORDER BY id ASC
+	</select>
+	<select id="selectPaged" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		<include refid="Table_Name" />
+		<where>
+			<include refid="Where_List" />
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy != null and orderBy.length > 0">
+				${orderBy}
+			</when>
+			<otherwise>
+				createOn DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- ↓↓↓↓↓↓↓↓↓↓ 扩展方法 ↓↓↓↓↓↓↓↓↓↓ -->
+	<select id="selectAll" resultType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		<include refid="Table_Name" />
+		ORDER BY createOn DESC;
+	</select>
+	<!-- ↑↑↑↑↑↑↑↑↑↑ 扩展方法 ↑↑↑↑↑↑↑↑↑↑ -->
+</mapper>

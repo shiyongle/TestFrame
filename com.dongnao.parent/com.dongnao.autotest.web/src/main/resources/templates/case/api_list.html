@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>接口测试</title>
+<div th:include="/include/header :: header"></div>
+</head>
+<body>
+	<div class="easyui-panel"
+		style="width: 100%; text-align: center; border: none; padding: 30px 60px;"
+		data-options="style:{textAlign:'center'}">
+		<form id="form1" method="post">
+			<div style="margin-bottom: 20px">
+				用例模板下载: <a href="/static/template/case_template.xlsx"
+					target="_blank">case_template.xlsx</a>
+			</div>
+			<div style="margin-bottom: 20px">
+				<input class="easyui-radiobutton" name="type" value="1"
+					checked="true" label="PC用例:" labelWidth="55px">
+				<label style="width: 30px;">&nbsp;</label>
+				<input class="easyui-radiobutton" name="type" value="2"
+					label="APP用例:" labelWidth="55px">
+				<label style="width: 30px;">&nbsp;</label>
+				<input class="easyui-radiobutton" name="type" value="3"
+					label="API用例:" labelWidth="55px">
+			</div>
+			<div style="margin-bottom: 20px">
+				模板上传:
+				<input id="file" name="file" class="f1 easyui-filebox"
+					style="width: 60%;" data-options="onChange:file_onChange"></input>
+			</div>
+		</form>
+		<div style="text-align: center; padding: 5px 0">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				onclick="return submitForm();" style="width: 80px">提交</a>
+		</div>
+	</div>
+	<div th:include="/include/footer :: footer"></div>
+	<script type="text/javascript" th:inline="javascript">
+	function file_onChange(newValue, oldValue) {
+	  if (!newValue)
+	    return false;
+	
+	  var nameArray = newValue.split(".");
+	  var name = nameArray[nameArray.length - 1];
+	  if (name != "xls" && name != "xlsx") {
+	    $.messager.alert("Warning", "必须上传Excel格式的文件!");
+	    $('#file').textbox("reset");
+	  }
+	  return false;
+	}
+	
+	function submitForm() {
+	  var data = new FormData($("#form1")[0]);
+	  $.ajax({
+	    url: "/api/get",
+	    type: "POST",
+	    data: data,
+	    dataType: "JSON",
+	    cache: false,
+	    processData: false, //不处理发送的数据，因为data值是FormData对象，不需要对数据做处理 
+	    contentType: false //不设置Content-type请求头
+	  }).done(function(data, textStatus, jqXHR) {
+	    if (data.success) {
+	      $.messager.alert("Warning", data.message);
+	    } else {
+	      alert('提交失敗');
+	    }
+	  });
+	  return false;
+	}
+	
+	$(function() {});
+	</script>
+</body>
+</html>
